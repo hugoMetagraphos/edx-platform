@@ -5,9 +5,10 @@ from unittest import skipUnless
 
 from django.conf import settings
 from django.test import TestCase
-from paver.easy import call_task
 
 from pipeline_mako import render_require_js_path_overrides, compressed_css, compressed_js
+
+from openedx.core.djangoapps.theming.tests.test_util import compile_sass
 
 
 class RequireJSPathOverridesTest(TestCase):
@@ -49,7 +50,7 @@ class PipelineRenderTest(TestCase):
         Create static assets once for all pipeline render tests.
         """
         super(PipelineRenderTest, cls).setUpClass()
-        call_task('pavelib.assets.update_assets', args=('lms', '--settings=test'))
+        compile_sass('lms')
 
     @skipUnless(settings.ROOT_URLCONF == 'lms.urls', 'Test only valid in LMS')
     @ddt.data(
