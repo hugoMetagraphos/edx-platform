@@ -29,23 +29,23 @@
 
             getRunMode: function(runModes){
                 var enrolled_mode = _.findWhere(runModes, {is_enrolled: true}),
-                    openEnrollmentRunModes = this.getEnrollableRunModes();
+                    openEnrollmentRunModes = this.getEnrollableRunModes(),
+                    desiredRunMode;
                 //we populate our model by looking at the run_modes
                 if (enrolled_mode){
                     // If we have a run_mode we are already enrolled in,
                     // return that one always
-                    return enrolled_mode;
-                }
-
-                if(openEnrollmentRunModes.length > 0){
+                    desiredRunMode = enrolled_mode;
+                } else if (openEnrollmentRunModes.length > 0){
                     if(openEnrollmentRunModes.length === 1){
-                        return openEnrollmentRunModes[0];
+                        desiredRunMode = openEnrollmentRunModes[0];
                     }else{
-                        return this.getUnselectedRunMode(openEnrollmentRunModes);
+                        desiredRunMode = this.getUnselectedRunMode(openEnrollmentRunModes);
                     }
                 }else{
-                    return this.getUnselectedRunMode(runModes); 
+                    desiredRunMode = this.getUnselectedRunMode(runModes); 
                 }
+                return desiredRunMode;
             },
 
             getEnrollableRunModes: function(){
@@ -78,6 +78,14 @@
                         enrollable_run_modes: this.getEnrollableRunModes()
                     });
                 }
+            },
+
+            setUnselected: function(){
+                //This should be called to reset the model
+                //back to the unselected state
+                var unselectedMode = this.getUnselectedRunMode(
+                    this.get('enrollable_run_modes'));
+                this.setActiveRunMode(unselectedMode);
             },
 
             updateRun: function(runKey){

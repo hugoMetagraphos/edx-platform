@@ -29,7 +29,7 @@
                     this.enrollModel = options.enrollModel;
                     this.urlModel = options.urlModel;
                     this.render();
-                    if(this.urlModel){
+                    if (this.urlModel){
                         this.trackSelectionUrl = this.urlModel.get('track_selection_url');
                     }
                 },
@@ -45,8 +45,7 @@
 
                 handleEnroll: function(){
                     //Enrollment click event handled here
-                    if (!this.model.get('course_key'))
-                    {
+                    if (!this.model.get('course_key')){
                         this.$('.select-error').css('visibility','visible');
                     } else if (!this.model.get('is_enrolled')){
                         // actually enroll
@@ -65,12 +64,9 @@
                         runKey = $(event.target).val();
                         if (runKey){
                             this.model.updateRun(runKey);
-                        }
-                        else{
+                        } else {
                             //Set back the unselected states
-                            this.model.setActiveRunMode(
-                                this.model.getUnselectedRunMode(
-                                    this.model.get('enrollable_run_modes')));
+                            this.model.setUnselected();
                         }
                     }
                 },
@@ -80,7 +76,7 @@
                     if (this.trackSelectionUrl) {
                         // Go to track selection page
                         this.redirect( this.trackSelectionUrl + courseKey );
-                    }else{
+                    } else {
                         this.model.set({
                             is_enrolled: true
                         });

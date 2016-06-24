@@ -27,7 +27,7 @@
                             value="<%- runMode.run_key %>"
                             <% if (run_key === runMode.run_key){ %>
                                 selected="selected"
-                                <% }%>
+                            <% }%>
                         >
                             <%= interpolate(
                                 gettext('Starts %(start)s'),
