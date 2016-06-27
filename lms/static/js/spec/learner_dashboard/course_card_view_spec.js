@@ -29,7 +29,7 @@ define([
                         run_key: '2T2016',
                         course_started: true,
                         is_enrolled: true,
-                        course_ended: false,
+                        is_course_ended: false,
                         is_enrollment_open: true,
                         certificate_url: '',
                         enrollment_open_date: 'Mar 03, 2016'
@@ -110,6 +110,14 @@ define([
                 expect(view.$('.no-action-message').text().trim()).toBe('Coming Soon');
                 expect(view.$('.enroll-open-date').text().trim())
                     .toBe(context.run_modes[0].enrollment_open_date);
+            });
+
+            it('should render if enrollment_open_date is not provided', function(){
+                view.remove();
+                context.run_modes[0].is_enrollment_open = true;
+                delete context.run_modes[0].enrollment_open_date
+                setupView(context, false);
+                validateCourseInfoDisplay();
             });
         });
     }

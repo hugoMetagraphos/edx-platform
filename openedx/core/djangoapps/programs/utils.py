@@ -348,15 +348,17 @@ def supplement_program_data(program_data, user):
             end_date = course_overview.end or datetime.datetime.max.replace(tzinfo=pytz.UTC)
             run_mode['start_date'] = start_date.strftime(human_friendly_format)
             run_mode['end_date'] = end_date.strftime(human_friendly_format)
-            run_mode['course_ended'] = end_date < timezone.now()
+            run_mode['is_course_ended'] = end_date < timezone.now()
 
             run_mode['is_enrolled'] = CourseEnrollment.is_enrolled(user, course_key)
 
-            enrollment_start = course_overview.enrollment_start or DEFAULT_START_DATE
+            enrollment_start = course_overview.enrollment_start or datetime.datetime.min.replace(tzinfo=pytz.UTC)
             enrollment_end = course_overview.enrollment_end or datetime.datetime.max.replace(tzinfo=pytz.UTC)
             is_enrollment_open = enrollment_start <= timezone.now() < enrollment_end
             run_mode['is_enrollment_open'] = is_enrollment_open
-            run_mode['enrollment_open_date'] = enrollment_start.strftime(human_friendly_format)
+            if not is_enrollment_open:
+                # Only render this enrollment open date if the enrollment open is in the future
+                run_mode['enrollment_open_date'] = enrollment_start.strftime(human_friendly_format)
 
             # TODO: Currently unavailable on LMS.
             run_mode['marketing_url'] = ''

@@ -53,7 +53,7 @@
                     {
                         is_enrollment_open: true,
                         is_enrolled: false,
-                        course_ended: false
+                        is_course_ended: false
                     });
             },
 
@@ -71,7 +71,7 @@
                         is_enrollment_open: runMode.is_enrollment_open,
                         key: this.context.key,
                         marketing_url: runMode.marketing_url || '',
-                        course_ended: runMode.course_ended,
+                        is_course_ended: runMode.is_course_ended,
                         mode_slug: runMode.mode_slug,
                         run_key: runMode.run_key,
                         enrollment_open_date: runMode.enrollment_open_date || '',

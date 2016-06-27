@@ -703,8 +703,6 @@ class TestSupplementProgramData(ProgramsApiConfigMixin, ModuleStoreTestCase):
     def _assert_supplemented(self, actual, **kwargs):
         """DRY helper used to verify that program data is extended correctly."""
         course_overview = CourseOverview.get_from_id(self.course.id)  # pylint: disable=no-member
-        enrollment_open_date = course_overview.enrollment_start or DEFAULT_START_DATE
-
         run_mode = dict(
             factories.RunMode(
                 course_key=unicode(self.course.id),  # pylint: disable=no-member
@@ -712,12 +710,16 @@ class TestSupplementProgramData(ProgramsApiConfigMixin, ModuleStoreTestCase):
                 course_image_url=course_overview.course_image_url,
                 start_date=self.course.start.strftime(self.human_friendly_format),
                 end_date=self.course.end.strftime(self.human_friendly_format),
-                course_ended=self.course.end < timezone.now(),
-                enrollment_open_date=enrollment_open_date.strftime(self.human_friendly_format),
+                is_course_ended=self.course.end < timezone.now(),
+                is_enrolled=False,
+                is_enrollment_open=True,
                 marketing_url='',
             ),
             **kwargs
         )
+
+        if not run_mode.get('is_enrollment_open', False) and course_overview.enrollment_start:
+            run_mode['enrollment_open_date'] = course_overview.enrollment_start.strftime(self.human_friendly_format)
 
         course_code = factories.CourseCode(display_name=self.course_code['display_name'], run_modes=[run_mode])
         expected = copy.deepcopy(self.program)
@@ -733,7 +735,7 @@ class TestSupplementProgramData(ProgramsApiConfigMixin, ModuleStoreTestCase):
 
         data = utils.supplement_program_data(self.program, self.user)
 
-        self._assert_supplemented(data, is_enrolled=is_enrolled, is_enrollment_open=False)
+        self._assert_supplemented(data, is_enrolled=is_enrolled)
 
     @ddt.data(
         [1, 1, False],
@@ -796,14 +798,10 @@ class TestSupplementProgramData(ProgramsApiConfigMixin, ModuleStoreTestCase):
         data = utils.supplement_program_data(self.program, self.user)
         self.assertEqual(data['organizations'][0].get('img'), None)
 
-    @ddt.data(
-        timezone.now() - datetime.timedelta(days=1),
-        timezone.now(),
-        timezone.now() + datetime.timedelta(days=1)
-    )
-    def test_course_course_ended(self, course_end):
-        self.course.end = course_end
+    @ddt.data(-1, 0, 1)
+    def test_course_course_ended(self, days_offset):
+        self.course.end = timezone.now() + datetime.timedelta(days=days_offset)
         self.course = self.update_course(self.course, self.user.id)  # pylint: disable=no-member
         data = utils.supplement_program_data(self.program, self.user)
 
-        self._assert_supplemented(data, is_enrollment_open=False)
+        self._assert_supplemented(data)
