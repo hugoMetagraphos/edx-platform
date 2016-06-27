@@ -3,14 +3,17 @@
         <div class="course-image-container">
             <% if (course_url){ %>
                 <a href="<%- course_url %>" class="course-image-link">
-            <% } %>
+                    <img
+                        class="header-img"
+                        src="<%- course_image_url %>"
+                        alt="<%= interpolate(gettext('%(courseName)s Home Page.'), {courseName: display_name}, true) %>"/>
+                </a>
+            <% } else { %>
                 <img
                     class="header-img"
-                    src="<%- course_image_url %>"
-                    alt="<%= interpolate(gettext('%(courseName)s Home Page.'), {courseName: display_name}, true) %>"/>
-            <% if (course_url){ %>
-                </a>
+                    src="<%- course_image_url %>" />
             <% } %>
+
         </div>
         <div class="course-details">
             <h3 class="course-title">
