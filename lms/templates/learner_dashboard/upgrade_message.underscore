@@ -1,0 +1,11 @@
+<div class="message col-12 md-col-8">
+    <span class="certificate-icon green-certificate-icon" aria-hidden="true"></span>
+    <span class="card-msg"><%- gettext('You need a verified certificate in this course to be eligible for the program certificate.') %></span>
+</div>
+<div class="action col-12 md-col-4"> 
+    <!-- <a href="<%- upgrade_url %>" class="btn-brand cta-primary"> -->
+    <a href="/foo/bar/upgrade" class="btn-brand cta-primary">
+        <span class="certificate-icon green-certificate-icon" aria-hidden="true"></span>
+        <%- gettext('Upgrade Now') %>
+    </a>
+</div>

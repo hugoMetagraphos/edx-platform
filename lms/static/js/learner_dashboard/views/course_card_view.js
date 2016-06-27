@@ -44,7 +44,8 @@
                 },
 
                 postRender: function(){
-                    var $certStatus = this.$('.certificate-status');
+                    var $upgradeMessage = this.$('.upgrade-message'),
+                        $certStatus = this.$('.certificate-status');
 
                     this.enrollView = new CourseEnrollView({
                         $parentEl: this.$('.course-actions'),
@@ -53,7 +54,12 @@
                         enrollModel: this.enrollModel
                     });
 
-                    if ( this.model.get('certificate_url') ) {
+                    if ( true ) {  // TODO: Check model to verify upgrade is possible.
+                        this.upgradeMessage = new UpgradeMessageView({
+                            $el: $upgradeMessage,
+                            model: this.urlModel
+                        });
+                    } else if ( this.model.get('certificate_url') ) {
                         this.certificateStatus = new CertificateStatusView({
                             $el: $certStatus,
                             model: this.model
