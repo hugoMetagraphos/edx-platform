@@ -115,7 +115,7 @@ define([
             it('should render if enrollment_open_date is not provided', function(){
                 view.remove();
                 context.run_modes[0].is_enrollment_open = true;
-                delete context.run_modes[0].enrollment_open_date
+                delete context.run_modes[0].enrollment_open_date;
                 setupView(context, false);
                 validateCourseInfoDisplay();
             });
