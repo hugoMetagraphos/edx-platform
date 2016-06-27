@@ -1,8 +1,13 @@
-;(function(define) {
+(function(define) {
     'use strict';
 
-    define(['jquery', 'backbone'],
-        function($, Backbone) {
+    define(
+        [
+            'jquery',
+            'backbone',
+            'discussion/js/discussion_router'
+        ],
+        function($, Backbone, DiscussionRouter) {
             return function(options) {
                 var $element = options.$el,
                     userInfo = options.user_info,
@@ -23,7 +28,7 @@
                 discussion = new window.Discussion(threads, {pages: threadPages, sort: sortPreference});
                 courseSettings = new window.DiscussionCourseSettings(options.course_settings);
                 // jshint nonew:false
-                new window.DiscussionRouter({
+                new DiscussionRouter({
                     discussion: discussion,
                     course_settings: courseSettings
                 });

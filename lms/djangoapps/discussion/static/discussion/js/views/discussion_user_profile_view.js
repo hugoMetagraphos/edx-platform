@@ -1,13 +1,13 @@
-;(function(define) {
+(function(define) {
     'use strict';
 
     define([
         'jquery', 'backbone', 'URI',
         'edx-ui-toolkit/js/utils/html-utils',
         'common/js/components/utils/view_utils',
-        'Discussion',
-        'DiscussionUtil',
-        'DiscussionThreadProfileView',
+        'common/js/discussion/discussion',
+        'common/js/discussion/utils',
+        'common/js/discussion/views/discussion_thread_profile_view',
         'text!discussion/templates/user-profile.underscore',
         'text!common/templates/discussion/pagination.underscore'
     ],
@@ -23,22 +23,23 @@
                     this.page = options.page;
                     this.numPages = options.numPages;
                     this.discussion = new Discussion();
-                    this.discussion.on('reset', this.render);
+                    this.discussion.on('reset', _.bind(this.render, this));
                     this.discussion.reset(this.collection, {silent: false});
                 },
 
                 render: function() {
-                    var baseUri = URI(window.location).removeSearch('page'),
+                    var self = this,
+                        baseUri = URI(window.location).removeSearch('page'),
                         pageUrlFunc,
                         paginationParams;
                     HtmlUtils.setHtml(this.$el, HtmlUtils.template(userProfileTemplate)({
-                        threads: this.discussion.models
+                        threads: self.discussion.models
                     }));
                     this.discussion.map(function(thread) {
                         var view = new DiscussionThreadProfileView({
-                            el: $('article#thread_#{thread.id}'),
+                            el: self.$('article#thread_' + thread.id),
                             model: thread
-                        }).
+                        });
                         view.render();
                         return view;
                     });
@@ -54,7 +55,8 @@
                 },
 
                 changePage: function(event) {
-                    var url;
+                    var self = this,
+                        url;
                     event.preventDefault();
                     url = $(event.target).attr('href');
                     DiscussionUtil.safeAjax({
@@ -65,9 +67,9 @@
                         type: 'GET',
                         dataType: 'json',
                         success: function(response) {
-                            this.page = response.page;
-                            this.numPages = response.num_pages;
-                            this.discussion.reset(response.discussion_data, {silent: false});
+                            self.page = response.page;
+                            self.numPages = response.num_pages;
+                            self.discussion.reset(response.discussion_data, {silent: false});
                             history.pushState({}, '', url);
                             ViewUtils.setScrollTop(0);
                         },

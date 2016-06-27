@@ -1,5 +1,14 @@
-define(['jquery', 'DiscussionUtil', 'DiscussionThreadProfileView', 'DiscussionSpecHelper'],
-    function($, DiscussionUtil, DiscussionThreadProfileView, DiscussionSpecHelper) {
+define(
+    [
+        'underscore',
+        'jquery',
+        'URI',
+        'common/js/discussion/utils',
+        'common/js/discussion/views/discussion_thread_profile_view',
+        'common/js/spec_helpers/discussion_spec_helper',
+        'discussion/js/views/discussion_user_profile_view'
+    ],
+    function(_, $, URI, DiscussionUtil, DiscussionThreadProfileView, DiscussionSpecHelper, DiscussionUserProfileView) {
         'use strict';
 
         describe('DiscussionUserProfileView', function() {
@@ -62,21 +71,21 @@ define(['jquery', 'DiscussionUtil', 'DiscussionThreadProfileView', 'DiscussionSp
                     };
                 };
                 checkRender = function(params) {
-                    var get_page_number, paginator, view;
+                    var getPageNumber, paginator, view;
                     view = makeView([], params.page, params.numPages);
                     paginator = view.$('.discussion-paginator');
-                    expect(paginator.find('.current-page').text()).toEqual(params['page'].toString());
-                    expect(paginator.find('.first-page').length).toBe(params['first'] ? 1 : 0);
-                    expect(paginator.find('.previous-page').length).toBe(params['previous'] ? 1 : 0);
-                    expect(paginator.find('.previous-ellipses').length).toBe(params['leftdots'] ? 1 : 0);
-                    expect(paginator.find('.next-page').length).toBe(params['next'] ? 1 : 0);
-                    expect(paginator.find('.next-ellipses').length).toBe(params['rightdots'] ? 1 : 0);
-                    expect(paginator.find('.last-page').length).toBe(params['last'] ? 1 : 0);
-                    get_page_number = function(element) {
-                        return parseInt($(element).text());
+                    expect(paginator.find('.current-page').text()).toEqual(params.page.toString());
+                    expect(paginator.find('.first-page').length).toBe(params.first ? 1 : 0);
+                    expect(paginator.find('.previous-page').length).toBe(params.previous ? 1 : 0);
+                    expect(paginator.find('.previous-ellipses').length).toBe(params.leftdots ? 1 : 0);
+                    expect(paginator.find('.next-page').length).toBe(params.next ? 1 : 0);
+                    expect(paginator.find('.next-ellipses').length).toBe(params.rightdots ? 1 : 0);
+                    expect(paginator.find('.last-page').length).toBe(params.last ? 1 : 0);
+                    getPageNumber = function(element) {
+                        return parseInt($(element).text(), 10);
                     };
-                    expect(_.map(paginator.find('.lower-page a'), get_page_number)).toEqual(params['lowPages']);
-                    return expect(_.map(paginator.find('.higher-page a'), get_page_number)).toEqual(params['highPages']);
+                    expect(_.map(paginator.find('.lower-page a'), getPageNumber)).toEqual(params.lowPages);
+                    return expect(_.map(paginator.find('.higher-page a'), getPageNumber)).toEqual(params.highPages);
                 };
 
                 it('for one page', function() {

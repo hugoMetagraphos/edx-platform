@@ -77,7 +77,7 @@
             'logger': 'empty:',
             'utility': 'empty:',
             'URI': 'empty:',
-            'DiscussionModuleView': 'empty:',
+            'common/js/discussion/discussion_module_view': 'empty:',
             'modernizr': 'empty',
 
             // Don't bundle UI Toolkit helpers as they are loaded into the "edx" namespace

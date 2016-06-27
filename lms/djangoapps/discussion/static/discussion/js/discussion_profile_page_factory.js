@@ -1,4 +1,4 @@
-;(function(define) {
+(function(define) {
     'use strict';
 
     define(['jquery', 'discussion/js/views/discussion_user_profile_view'],
