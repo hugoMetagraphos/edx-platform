@@ -11,7 +11,8 @@
             <% } else { %>
                 <img
                     class="header-img"
-                    src="<%- course_image_url %>" />
+                    src="<%- course_image_url %>"
+                    alt="" />
             <% } %>
 
         </div>
